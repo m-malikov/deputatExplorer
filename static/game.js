@@ -46,6 +46,10 @@ function get_good_month(n) {
     return 'месяцев'
 }
 
+function get_good_number(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
 function work() {
     if (CELLS_PAINTED >= CELLS_NUMBER) return
 
@@ -104,8 +108,8 @@ function init_data(id) {
     CELL_COST = SMALL_SALARY / CELLS_IN_SMALL_SALARY
     CELLS_NUMBER = BIG_SALARY / CELL_COST
     document.getElementById('name').innerText = NAME
-    document.getElementById('big_salary').innerText = 'Зарабатывает ' + BIG_SALARY + '₽ в год'
-    document.getElementById('small_salary').innerText = 'Вы зарабатываете ' + SMALL_SALARY + '₽ в месяц'
+    document.getElementById('big_salary').innerText = 'Зарабатывает ' + get_good_number(BIG_SALARY) + '₽ в год'
+    document.getElementById('small_salary').innerText = 'Вы зарабатываете ' + get_good_number(SMALL_SALARY) + '₽ в месяц'
     generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
 
 }
