@@ -145,16 +145,33 @@ body {
 }
 
 .coin {
-    width: 10px;
-    height: 10px;
     background: lightgray;
-    border: 3px solid rgb(245, 245, 245);
     display: inline-block;
 }
 
 .activated {
     background: #4CAF50;
+    animation-duration: 1s;
+    animation-name: bounceIn;
+}	
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  90% {
+ 	transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
+
 
 #time {
     margin-top: 30px;

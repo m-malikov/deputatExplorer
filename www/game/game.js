@@ -3,14 +3,15 @@ let id = params.get("id");
 
 
 
-var CELL_COST = 100;
+var CELL_COST = 1000;
 var AVERAGE_SALARY;
 var PERSON_SALARY;
 function createTable() {
     var n_cells = PERSON_SALARY / CELL_COST;
     var innerHTML = "";
+    var coin_size = Math.max(15, -PERSON_SALARY/35000 + 198/7);
     for (let i=0; i < n_cells; i++) {
-        innerHTML += '<div class="coin"></div>'
+        innerHTML +=  `<div class="coin" style="width: ${coin_size}px; height: ${coin_size}px; margin: ${coin_size/2}px"></div>`
     }
     let area = document.getElementById('area');
     area.innerHTML = innerHTML;
