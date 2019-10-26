@@ -4,15 +4,17 @@ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 function getColor(props) {
-    var d  = parseFloat(props.m) / parseFloat(props.median);
-    console.log(props);
-	return d > 1000 ? '#800026' :
-	       d > 500  ? '#BD0026' :
-	       d > 200  ? '#E31A1C' :
-	       d > 100  ? '#FC4E2A' :
-	       d > 50   ? '#FD8D3C' :
-	       d > 20   ? '#FEB24C' :
-	       d > 10   ? '#FED976' :
+    if (props.salary_mean == 0) {
+        return '#FFEDA0'
+    }
+    var d  = parseFloat(props.man_mean) / parseFloat(props.salary_mean);
+	return d > 30 ? '#800026' :
+	       d > 15  ? '#BD0026' :
+	       d > 10  ? '#E31A1C' :
+	       d > 5  ? '#FC4E2A' :
+	       d > 3   ? '#FD8D3C' :
+	       d > 2   ? '#FEB24C' :
+	       d > 1   ? '#FED976' :
 	                  '#FFEDA0';
 }
 
@@ -54,19 +56,19 @@ fetch('russia_with_data.json').then(response => {
             `<table>
                 <tr>
                     <td>Средний доход чиновников-мужчин</td>
-                    <td>${normalize_number(props.m)}</td>
+                    <td>${normalize_number(props.man_mean)}</td>
                 </tr>
                 <tr>
                     <td>Средний доход чиновников-женщин</td>
-                    <td>${normalize_number(props.f)}</td>
+                    <td>${normalize_number(props.fem_mean)}</td>
                 </tr>
                 <tr>
                     <td>Средний доход в регионе</td>
-                    <td>${normalize_number(props.median)}</td>
+                    <td>${normalize_number(props.salary_mean)}</td>
                 </tr>
                 <tr>
                     <td>Отношение дохода чиновника к среднему</td>
-                    <td><b>${normalize_number(Math.round(props.m / props.median))}</b></td>
+                    <td><b>${parseFloat(props.man_mean) / parseFloat(props.salary_mean)}</b></td>
                 </tr>
             </table>`
             : 'Наведите на регион');
