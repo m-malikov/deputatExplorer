@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Какой ты чиновник?</title>
+
+  <script>
+    fetch('/regions.json').then(response => {
+        return response.json();
+    }).then(regions => {
+        var selector = document.getElementById("regions");
+        for (r of regions) {
+            selector.innerHTML += (`<option value=${r.id}>${r.name}</option>`);
+        }
+    });
+
+    function select() {
+        var selector = document.getElementById("regions");
+        var value = selector.options[selector.selectedIndex].value;
+        localStorage.setItem("region", value);
+        window.location.href = "q3.html"
+    }
+  </script>
+</head>
+
+<body>
+    <h1> Откуда ты? </h1>
+    <select id="regions">
+        <option value=0>Нет региона</option>
+    </select>
+    <button onclick="select()">Выбрать</button>    
+</body>
+</html>

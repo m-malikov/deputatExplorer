@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Какой ты чиновник?</title>
+
+  <script>
+      function chooseGender(gender) {
+          localStorage.setItem("gender", gender);
+          window.location.href = "q2.html"
+      }
+  </script>
+</head>
+
+<body>
+    <h1> Выбери пол </h1>
+    <button onclick="chooseGender('М')">Чиновник</button>
+    <button onclick="chooseGender('F')">Чиновни_ца</button>
+</body>
+</html>
