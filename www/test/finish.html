@@ -13,7 +13,12 @@
     }).then(response => {
         return response.text();
     }).then(text => {
-        console.log(text);
+        if (text == "0") {
+            window.location.href = "tryagain.html";
+        } else {
+            window.location.href = "/game/game.html?id=" + text;
+        }
+            
     });
   </script>
 </head>

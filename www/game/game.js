@@ -110,5 +110,6 @@ function init_data(id) {
 
 }
 
-let all_officials = fetch_all()
-init_data(all_officials[0].id)
+let params = new URLSearchParams(document.location.search.substring(1));
+let id = params.get("id");
+init_data(id);
