@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Какой ты чиновник?</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
 
   <script>
       function chooseJob(job) {
@@ -14,9 +15,37 @@
 </head>
 
 <body>
-    <h1> Где ты работаешь? </h1>
-    <button onclick="chooseJob(1)">В больнице</button>
-    <button onclick="chooseJob(2)">В полиции</button>
-    <button onclick="chooseJob(3)">Занимаюсь наукой</button>
-    <button onclick="chooseJob(0)">Всё сложно</button>
+    <div class="main" align="center">
+        <h1> Где ты работаешь? </h1>
+        <table>
+            <tr>
+                <td>
+                    <button class="btn" onclick="chooseJob(1)">
+                        В больнице</br>
+                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-health-worker-type-1-2_1f468-1f3fb-200d-2695-fe0f.png"></image>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn" onclick="chooseJob(2)">
+                        В полиции</br>
+                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/police-officer_emoji-modifier-fitzpatrick-type-1-2_1f46e-1f3fb_1f3fb.png"></image>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="btn" onclick="chooseJob(3)">
+                        Я -- ученый</br>
+                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-teacher-type-1-2_1f468-1f3fb-200d-1f3eb.png"></image>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn_disabled" onclick="chooseJob(0)">
+                        Всё сложно</br>
+                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-office-worker-type-1-2_1f468-1f3fb-200d-1f4bc.png"></image>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
 </html>
