@@ -2,48 +2,51 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
     <title>Pass</title>
 </head>
 
 <body>
 
-<div class="row">
-  <div class="main" id="area">
-  </div>
-  <div class="side">
-      <h2><p class="unit" id="name"></p></h2>
-      <p class="unit" id="office_name"></p>
-      <p class="unit" id="region_name"></p>
-      <br>
-      <p class="unit" id="big_salary"></p>
-      <p class="unit" id="small_salary"></p>
-      <br>
-      <div class="form_div">
-          <span>Зарплата врача:</span><button class="btn_small">12000</button>
-      </div>
-      <div class="form_div">
-          <label for="your_salary">Или введите:</label><input class="input_small" id="your_salary" oninput="read_input()"/>
-      </div>
-      <br>
-      <br>
-      <br>
-      <button class="btn" id="work_button1" onclick="work()">Работать месяц</button>
-      <button class="btn" id="work_button2" onclick="work()">Работать год</button>
-      <br>
-      <br>
-      <p class="unit" id="worked">Вы работали 0 месяцев</p>
-      <p class="unit">Чиновник работал 12 месяцев</p>
-  </div>
-</div>
-<div class="row">
-    <div class="main" align="center">
-        <a class="unit" href="/map" align="center">
-            Смотреть полную статистику по регионам
-        </a>
+<div class="main" text-align="center">
+    <h1> Сколько месяцев нужно работать на зарплату чиновника? </h1>
+    <div class="row">
+        <div id="area" class="left">
+        </div>
+        <div class="side" text-align="left">
+            <h2><p class="unit" id="name"></p></h2>
+            <p class="unit" id="office_name"></p>
+            <p class="unit" id="region_name"></p>
+            <br>
+            <p class="unit" id="big_salary"></p>
+            <p class="unit" id="small_salary"></p>
+            <br>
+            <br>
+            <button class="btn btn_small" id="start_working" onclick="start_working()"> Начать работу </button> 
+            <table id="time" style="display:none"> 
+                <tr>
+                    <td>Месяцев проработано</td>
+                    <td id="work_periods"></td>
+                </tr>
+                <tr>
+                    <td>Текущая дата</td>
+                    <td id="current_date"></td>
+                </tr>
+                <tr>
+                    <td>Денег заработано</td>
+                    <td id="total_earned"></td>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div>
+            <a class="unit" href="/map" align="center">
+                Смотреть полную статистику по регионам
+            </a>
+        </div>
+    </div>
 <script src="game.js"></script>
 </body>
 </html>
