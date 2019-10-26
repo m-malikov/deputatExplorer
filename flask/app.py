@@ -87,8 +87,7 @@ def findPerson():
 
         return str(cursor.next()["_id"])
     except:
-        return "0:w
-        "
+        return "0"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
