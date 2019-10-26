@@ -33,7 +33,7 @@ def get_one(person_id):
 @app.route('/api/findPerson')
 def findPerson():
     gender = request.args.get("gender")
-    region = request.args.get("region")
+    region = int(request.args.get("region"))
     age = request.args.get("age")
     job = request.args.get("job")
     """
@@ -55,7 +55,20 @@ def findPerson():
         Можно что-то рандомизировать наверное.
 
     """
-    return '21583'
+    gender_cursor = db.aggregate([
+        {
+            '$project': {
+                'declaration': {'$arrayElemAt': ['$declarations', -1]}
+            }
+        },
+        {
+            '$match': {
+                'declaration.main.person.gender': gender,
+                'declaration.main.office.region.id': region
+            }
+        }
+])
+    return str(gender_cursor.next()["_id"])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
