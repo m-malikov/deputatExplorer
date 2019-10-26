@@ -27,7 +27,7 @@ body {
 
 .main::after {
     content: "";
-    background: url(photo_2019-10-26_12-54-21.jpg);
+    background: url(background.jpg);
     opacity: 0.5;
     top: 0;
     left: 0;
