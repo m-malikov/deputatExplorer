@@ -32,60 +32,63 @@ def get_one(person_id):
 
 @app.route('/api/findPerson')
 def findPerson():
+    try:
+        match_expression = {}
 
-    match_expression = {}
-
-    gender = request.args.get("gender")
-    match_expression.update({
-        'declarations.main.person.gender': gender
-    })
-
-    region = int(request.args.get("region"))
-    if region == 0:
+        gender = request.args.get("gender")
         match_expression.update({
-            'declarations.main.office.region': None,
+            'declarations.main.person.gender': gender
         })
 
-    else:
-        match_expression.update({
-            'declarations.main.office.region.id': region 
-        })
-    
-    job = request.args.get("job")
-    if job == "3":
-        match_expression.update({
-            '$or': [
-                {'declarations.main.office.name': {'$regex': '.*БОУ.*'}},
-                {'declarations.main.office.name': {'$regex': '.*институт.*', "$options": "-i"}},
-                {'declarations.main.office.name': {'$regex': '.*университет.*', "$options": "-i"}},
-                {'declarations.main.office.name': {'$regex': '.*обр.*', "$options": "-i"}},
-            ]
-        })
-    elif job == "2":
-        match_expression.update({
-            '$or': [
-               {'declarations.main.office.name': {'$regex': '.*ФСИН.*'}}, 
-               {'declarations.main.office.name': {'$regex': '.*МВД.*'}}
-            ]
-        })
-    elif job == "1":
-        match_expression.update({
-            '$or': [
-               {'declarations.main.office.name': {'$regex': '.*БУЗ.*'}}, 
-               {'declarations.main.office.name': {'$regex': '.*здрав.*', "$options": "-i"}}
-            ]
-        })
+        region = int(request.args.get("region"))
+        if region == 0:
+            match_expression.update({
+                'declarations.main.office.region': None,
+            })
 
-    cursor = db.aggregate([
-        {
-            '$unwind': '$declarations'
-        },
-        {
-            '$match': match_expression
-        } 
-    ])
+        else:
+            match_expression.update({
+                'declarations.main.office.region.id': region 
+            })
+        
+        job = request.args.get("job")
+        if job == "3":
+            match_expression.update({
+                '$or': [
+                    {'declarations.main.office.name': {'$regex': '.*БОУ.*'}},
+                    {'declarations.main.office.name': {'$regex': '.*институт.*', "$options": "-i"}},
+                    {'declarations.main.office.name': {'$regex': '.*университет.*', "$options": "-i"}},
+                    {'declarations.main.office.name': {'$regex': '.*обр.*', "$options": "-i"}},
+                ]
+            })
+        elif job == "2":
+            match_expression.update({
+                '$or': [
+                {'declarations.main.office.name': {'$regex': '.*ФСИН.*'}}, 
+                {'declarations.main.office.name': {'$regex': '.*МВД.*'}}
+                ]
+            })
+        elif job == "1":
+            match_expression.update({
+                '$or': [
+                {'declarations.main.office.name': {'$regex': '.*БУЗ.*'}}, 
+                {'declarations.main.office.name': {'$regex': '.*здрав.*', "$options": "-i"}}
+                ]
+            })
 
-    return str(cursor.next()["_id"])
+        cursor = db.aggregate([
+            {
+                '$unwind': '$declarations'
+            },
+            {
+                '$match': match_expression
+            } 
+        ])
+
+        return str(cursor.next()["_id"])
+    except:
+        return "0:w
+        "
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
