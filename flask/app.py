@@ -18,16 +18,20 @@ def get_one(person_id):
     office_names = list(set(office_names))
 
     region_names = []
+    region_ids = []
     for declaration in person["declarations"]:
         if declaration["main"]["office"]["region"] is not None:
             region_names.append(declaration["main"]["office"]["region"]["name"])
+            region_ids.append(declaration["main"]["office"]["region"]["id"])
     region_names = list(set(region_names))
+    region_ids = list(set(region_ids))
 
     return jsonify({
         "name": declaration["main"]["person"]["name"],
         "salary": total_income,
         "office_names": office_names,
-        "region_names": region_names
+        "region_names": region_names,
+        "region_ids": region_ids
     })
 
 @app.route('/api/findPerson')

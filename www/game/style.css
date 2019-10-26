@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 16px;
     background-color: #ebebeb;
 }
@@ -10,31 +10,33 @@ body {
 }
 
 .row {
-    display: flex;
+  margin-top: 50px;
+  display: flex;
 }
 
 .main {
     flex: 70%;
     background-color: rgb(245, 245, 245);
-    margin: 50px 400px 0 400px;
+    margin: 50px 250px 0 250px;
     padding: 20px 20px 50px;
     border-radius: 10px;
 
-    -webkit-box-shadow: 0px 10px 45px -10px rgba(0, 0, 0, 0.53);
-    -moz-box-shadow: 0px 10px 45px -10px rgba(0, 0, 0, 0.53);
-    box-shadow: 0px 10px 45px -10px rgba(0, 0, 0, 0.53);
+
+    -webkit-box-shadow: 0px 10px 45px -10px rgba(0,0,0,0.53);
+    -moz-box-shadow: 0px 10px 45px -10px rgba(0,0,0,0.53);
+    box-shadow: 0px 10px 45px -10px rgba(0,0,0,0.53);
 }
 
 .main::after {
-    content: "";
-    background: url(background.jpg);
-    opacity: 0.5;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    z-index: -1;
+  content: "";
+  background: url(/photo_2019-10-26_12-54-21.jpg);
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
     filter: blur(5px);
 }
 
@@ -42,6 +44,7 @@ body {
     flex: 30%;
     padding: 20px;
     margin-top: 60px;
+    text-align: left;
 }
 
 .btn {
@@ -52,10 +55,8 @@ body {
     text-align: center;
     font-size: 16px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 3px;
     outline: none;
-    text-decoration: none;
-    text-transform: none;
 }
 
 .btn_choose {
@@ -100,7 +101,6 @@ body {
     cursor: pointer;
     border-radius: 2px;
     outline: none;
-    margin-left: 10px;
 }
 
 .btn_small:hover {
@@ -124,7 +124,7 @@ body {
 }
 
 #area th, #area td {
-    border: 1px solid #a5a5a5;
+    border: 1px solid white;
     background-color: lightgrey;
 
 }
@@ -139,49 +139,27 @@ body {
     text-align: justify;
 }
 
-.test_index_div {
-    margin-bottom: 40px;
+.left {
+    flex: 50%;
+    line-height: 0%;
 }
 
-.dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    outline: none;
+.coin {
+    width: 10px;
+    height: 10px;
+    background: lightgray;
+    border: 3px solid rgb(245, 245, 245);
+    display: inline-block;
 }
 
-.dropdown-content {
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+.activated {
+    background: #4CAF50;
 }
 
-.dropdown-content option {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    background-color: #f9f9f9;
+#time {
+    margin-top: 30px;
 }
 
-.dropdown-content option:hover {
-    background-color: #f1f1f1
-}
-
-.dropbtn:hover {
-    background-color: #42a045;
-}
-
-.dropbtn:active {
-    background-color: #3e8e41;
-    border-radius: 5px 5px 0 0;
-}
-
-,coin {
-    background-color: darkgrey;
-    width: 5px;
-    height: 5px;
+#work_periods, #current_date, #total_earned {
+    margin: 40px;
 }

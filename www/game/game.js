@@ -1,136 +1,78 @@
-let NAME = ''
-let BIG_SALARY = 0
-let SMALL_SALARY = 35001
-let CELLS_IN_ROW = 100
-let CELLS_IN_SMALL_SALARY = 3
-let CELL_COST = 0
-let CELLS_NUMBER = 0
-let CELLS_PAINTED = 0
-let WORKED = 0
-
-let YEAR_FLAG = false
-
-function generate_cubes(n, m, size_n, size_m) {
-    let area = document.getElementById('area')
-    let table = document.createElement('table')
-    let counter = 0
-    for (let i=0; i<n; i++) {
-        let tr = table.insertRow()
-        for (let j=0; j<m; j++) {
-            let td = tr.insertCell()
-            td.style.width = size_n + 'px'
-            td.style.height = size_m + 'px'
-            td.id = i*m + j
-
-            counter++
-            if (counter >= CELLS_NUMBER) {
-                break
-            }
-        }
-    }
-    area.appendChild(table)
-}
-
-function get_good_month(n) {
-    n %= 100
-    if (n >= 5 && n <= 20) {
-        return 'месяцев'
-    }
-    n %= 10
-    if (n === 1) {
-        return 'месяц'
-    }
-    if (n >= 2 && n <= 4) {
-        return 'месяца'
-    }
-    return 'месяцев'
-}
-
-function get_good_number(n) {
-    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-}
-
-function work() {
-    if (CELLS_PAINTED >= CELLS_NUMBER) return
-
-    for (let i=0; i<CELLS_IN_SMALL_SALARY; i++) {
-        if (CELLS_PAINTED >= CELLS_NUMBER) return
-        document.getElementById(CELLS_PAINTED++).style.backgroundColor = 'red'
-    }
-
-    if (YEAR_FLAG) {
-        WORKED += 12
-    } else {
-        WORKED += 1
-    }
-
-    if (!YEAR_FLAG && WORKED === 12) {
-        let btn1 = document.getElementById('work_button1')
-        btn1.className += ' btn_disabled'
-        btn1.onclick = null
-        document.getElementById('work_button2').style.display = 'block'
-        CELLS_IN_SMALL_SALARY *= 12
-        YEAR_FLAG = true
-    }
-
-    document.getElementById('worked').innerText = 'Вы работали ' + WORKED + ' ' + get_good_month(WORKED)
-}
-
-function fetch_all() {
-    let xhr = new XMLHttpRequest()
-    xhr.open('GET', '/api/getAll', false)
-    xhr.send()
-    if (xhr.status !== 200) {
-        console.error(xhr.status + ': ' + xhr.statusText)
-        return {}
-    } else {
-        return JSON.parse(xhr.responseText)
-    }
-}
-
-function fetch_official(id) {
-    let xhr = new XMLHttpRequest()
-    xhr.open('GET', '/api/get/' + id, false)
-    xhr.send()
-    if (xhr.status !== 200) {
-        console.error(xhr.status + ': ' + xhr.statusText)
-        return {}
-    } else {
-        return JSON.parse(xhr.responseText)
-    }
-}
-
-function update_salary() {
-    CELL_COST = SMALL_SALARY / CELLS_IN_SMALL_SALARY
-    CELLS_NUMBER = BIG_SALARY / CELL_COST
-    document.getElementById('name').innerText = NAME
-    document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + BIG_SALARY.toLocaleString() + '</b> ₽ в год'
-    document.getElementById('small_salary').innerHTML = 'Вы зарабатываете <b>' + SMALL_SALARY.toLocaleString() + '</b> ₽ в месяц'
-}
-
-function update(res) {
-    NAME = res.name
-    BIG_SALARY = res.salary
-    update_salary()
-    document.getElementById('office_name').innerText = res.office_names.join("\n")
-    document.getElementById('region_name').innerText = res.region_names.join(", ")
-}
-
-function init_data(id) {
-    let res = fetch_official(id)
-    console.log(res)
-    update(res)
-    generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
-}
-
-function read_input() {
-    SMALL_SALARY = document.getElementById('your_salary').value
-    update_salary()
-}
-
-// let all_officials = fetch_all()
-// init_data(all_officials[0].id)
-
 let params = new URLSearchParams(document.location.search.substring(1));
 let id = params.get("id");
-init_data(id);
+
+
+
+var CELL_COST = 100;
+var AVERAGE_SALARY;
+var PERSON_SALARY;
+function createTable() {
+    var n_cells = PERSON_SALARY / CELL_COST;
+    var innerHTML = "";
+    for (let i=0; i < n_cells; i++) {
+        innerHTML += '<div class="coin"></div>'
+    }
+    let area = document.getElementById('area');
+    area.innerHTML = innerHTML;
+}
+
+var WORK_PERIODS = 0;
+function work() {
+    WORK_PERIODS += 1;
+    var total_earned = WORK_PERIODS * AVERAGE_SALARY;
+    var cells_to_highlight = total_earned / CELL_COST;
+    console.log(AVERAGE_SALARY);
+    
+    for ([i, child] of document.getElementById("area").childNodes.entries()) {
+        child.classList.add("activated");
+        if (i > cells_to_highlight) break;
+    }
+
+    document.getElementById("work_periods").innerText = WORK_PERIODS;
+    Date.prototype.addMonths = function(months) {
+        var date = new Date(this.valueOf());
+        date.setMonth(date.getDate() + months);
+        return date;
+    }
+    var date = new Date();
+    document.getElementById("current_date").innerText = date.addMonths(WORK_PERIODS).toLocaleDateString();
+    document.getElementById("total_earned").innerText = parseInt(total_earned).toLocaleString();
+
+    if (total_earned > PERSON_SALARY) {
+        document.getElementById("start_working").style.display = "none";
+    }
+}
+
+function start_working() {
+    document.getElementById("start_working").innerText = "Продолжить работу";
+    document.getElementById("start_working").onclick = work;
+    document.getElementById("time").style.display = "block";
+    work();
+}
+
+fetch(`/api/get/${id}`)
+.then(response => {
+    return response.json();
+}).then(person_data => {
+    document.getElementById('name').innerText = person_data.name;
+    document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + parseInt(person_data.salary / 12).toLocaleString() + '</b> ₽ в месяц';
+    document.getElementById('office_name').innerText = person_data.office_names.join("\n");
+    document.getElementById('region_name').innerText = person_data.region_names.join(", ");
+
+    fetch('/map/russia_with_data.json')
+    .then(response => {
+        return response.json();
+    }).then(regions_data => {
+        AVERAGE_SALARY = 32635;
+        document.getElementById('small_salary').innerHTML = 'Средний доход в России <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц'; 
+        for (region of regions_data["features"]) {
+            if (person_data.region_ids.includes(region.properties.id)) {
+                AVERAGE_SALARY = region.properties.median;
+                document.getElementById('small_salary').innerHTML = 'Средний доход в регионе <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц';
+                break;
+            }
+        }
+        PERSON_SALARY = person_data.salary / 12;
+        createTable();
+    })
+})
