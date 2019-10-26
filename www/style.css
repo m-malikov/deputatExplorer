@@ -179,3 +179,7 @@ body {
     background-color: #3e8e41;
     border-radius: 5px 5px 0 0;
 }
+
+.tryagain_link {
+    font-size: 25px;
+}
