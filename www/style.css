@@ -180,8 +180,6 @@ body {
     border-radius: 5px 5px 0 0;
 }
 
-,coin {
-    background-color: darkgrey;
-    width: 5px;
-    height: 5px;
+.tryagain_link {
+    font-size: 25px;
 }
