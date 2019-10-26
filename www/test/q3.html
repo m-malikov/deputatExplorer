@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Какой ты чиновник?</title>
+
+  <script>
+      function chooseJob(job) {
+          localStorage.setItem("job", job);
+          window.location.href = "q4.html"
+      }
+  </script>
+</head>
+
+<body>
+    <h1> Где ты работаешь? </h1>
+    <button onclick="chooseJob(1)">В больнице</button>
+    <button onclick="chooseJob(2)">В полиции</button>
+    <button onclick="chooseJob(3)">Занимаюсь наукой</button>
+    <button onclick="chooseJob(0)">Всё сложно</button>
+</html>

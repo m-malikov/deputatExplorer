@@ -35,5 +35,9 @@ def get_one(person_id):
         }
     )
 
+@app.route('/api/findPerson')
+def findPerson():
+    return '21583'
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
