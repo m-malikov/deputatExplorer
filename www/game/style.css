@@ -180,3 +180,13 @@ body {
 #work_periods, #current_date, #total_earned {
     margin: 40px;
 }
+
+#photo {
+    text-align: center;
+}
+
+.avatar {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 5px;
+}

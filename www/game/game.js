@@ -17,6 +17,30 @@ function createTable() {
     area.innerHTML = innerHTML;
 }
 
+function add_other() {
+    var other_ids = localStorage.getItem("otherIds").split(',');
+    for (let other_id of other_ids) {
+        if (other_id != id) {
+            fetch(`/api/get/${other_id}`)
+            .then(response => {
+                return response.json()
+            }).then(other_data => {
+                document.getElementById("others").innerHTML += `<li><a href="/game/game.html?id=${other_id}">${other_data.name}</a></li>`
+            })
+        }
+    }
+}
+
+function add_photo(name) {
+    fetch('/api/getPhoto?name=' + encodeURI(name)).then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+    }).then(url => {
+        if (url) document.getElementById("photo").innerHTML += `<img src="${url}" class="avatar"></img>`
+    })
+}
+
 var WORK_PERIODS = 0;
 function work() {
     WORK_PERIODS += 1;
@@ -75,5 +99,7 @@ fetch(`/api/get/${id}`)
         }
         PERSON_SALARY = person_data.salary / 12;
         createTable();
+        add_other();
+        add_photo(person_data.name);
     })
 })
