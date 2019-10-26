@@ -1,6 +1,6 @@
 let NAME = ''
 let BIG_SALARY = 0
-let SMALL_SALARY = 35836
+let SMALL_SALARY = 35000
 let CELLS_IN_ROW = 100
 let CELLS_IN_SMALL_SALARY = 3
 let CELL_COST = 0
@@ -100,18 +100,27 @@ function fetch_official(id) {
     }
 }
 
-function init_data(id) {
-    let res = fetch_official(id)
-    console.log(res)
-    NAME = res.name
-    BIG_SALARY = res.salary
+function update() {
     CELL_COST = SMALL_SALARY / CELLS_IN_SMALL_SALARY
     CELLS_NUMBER = BIG_SALARY / CELL_COST
     document.getElementById('name').innerText = NAME
     document.getElementById('big_salary').innerText = 'Зарабатывает ' + get_good_number(BIG_SALARY) + '₽ в год'
     document.getElementById('small_salary').innerText = 'Вы зарабатываете ' + get_good_number(SMALL_SALARY) + '₽ в месяц'
+}
+
+function init_data(id) {
+    let res = fetch_official(id)
+    console.log(res)
+    NAME = res.name
+    BIG_SALARY = res.salary
+    update()
     generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
 
+}
+
+function read_input() {
+    SMALL_SALARY = document.getElementById('your_salary').value
+    update()
 }
 
 let all_officials = fetch_all()

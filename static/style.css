@@ -61,6 +61,32 @@ body {
     margin-top: 10px;
 }
 
+.btn_small {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    outline: none;
+    margin-left: 10px;
+}
+
+.btn_small:hover {
+    background-color: #4ca153;
+}
+
+.btn_small:active {
+    background-color: #4c9a4d;
+}
+
+.input_small {
+    margin-left: 10px;
+    width: 100px;
+}
+
 #area table {
     border-collapse: collapse;
     display: flex;
@@ -72,4 +98,8 @@ body {
     border: 1px solid #a5a5a5;
     background-color: lightgrey;
 
+}
+
+.form_div {
+    margin-top: 5px;
 }
