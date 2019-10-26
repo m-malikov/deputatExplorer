@@ -1,6 +1,6 @@
 let NAME = ''
 let BIG_SALARY = 0
-let SMALL_SALARY = 35836
+let SMALL_SALARY = 35001
 let CELLS_IN_ROW = 100
 let CELLS_IN_SMALL_SALARY = 3
 let CELL_COST = 0
@@ -44,6 +44,10 @@ function get_good_month(n) {
         return 'месяца'
     }
     return 'месяцев'
+}
+
+function get_good_number(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 function work() {
@@ -96,21 +100,36 @@ function fetch_official(id) {
     }
 }
 
-function init_data(id) {
-    let res = fetch_official(id)
-    console.log(res)
-    NAME = res.name
-    BIG_SALARY = res.salary
+function update_salary() {
     CELL_COST = SMALL_SALARY / CELLS_IN_SMALL_SALARY
     CELLS_NUMBER = BIG_SALARY / CELL_COST
     document.getElementById('name').innerText = NAME
     document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + BIG_SALARY.toLocaleString() + '</b> ₽ в год'
     document.getElementById('small_salary').innerHTML = 'Вы зарабатываете <b>' + SMALL_SALARY.toLocaleString() + '</b> ₽ в месяц'
-    document.getElementById('office_name').innerText = res.office_names.join("\n");
-    document.getElementById('region_name').innerText = res.region_names.join(", ");
-    generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
-
 }
+
+function update(res) {
+    NAME = res.name
+    BIG_SALARY = res.salary
+    update_salary()
+    document.getElementById('office_name').innerText = res.office_names.join("\n")
+    document.getElementById('region_name').innerText = res.region_names.join(", ")
+}
+
+function init_data(id) {
+    let res = fetch_official(id)
+    console.log(res)
+    update(res)
+    generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
+}
+
+function read_input() {
+    SMALL_SALARY = document.getElementById('your_salary').value
+    update_salary()
+}
+
+// let all_officials = fetch_all()
+// init_data(all_officials[0].id)
 
 let params = new URLSearchParams(document.location.search.substring(1));
 let id = params.get("id");
