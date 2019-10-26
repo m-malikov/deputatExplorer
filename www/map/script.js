@@ -1,12 +1,25 @@
-var map = L.map('mapid').setView([80, 100], 3);
+var map = L.map('mapid').setView([70, 100], 3);
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	maxZoom: 18,
 }).addTo(map);
 
+function getColor(props) {
+    var d  = parseFloat(props.m) / parseFloat(props.median);
+    console.log(props);
+	return d > 1000 ? '#800026' :
+	       d > 500  ? '#BD0026' :
+	       d > 200  ? '#E31A1C' :
+	       d > 100  ? '#FC4E2A' :
+	       d > 50   ? '#FD8D3C' :
+	       d > 20   ? '#FEB24C' :
+	       d > 10   ? '#FED976' :
+	                  '#FFEDA0';
+}
+
 function style(feature) {
     return {
-        fillColor: "#712f26",
-        fillOpacity: 0.3,
+        fillColor: getColor(feature.properties),
+        fillOpacity: 0.7,
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -14,7 +27,16 @@ function style(feature) {
     }
 }
 
-fetch('russia_compressed.json').then(response => {
+function normalize_number(number) {
+    value = parseInt(number).toLocaleString(options={maximumFractionDigits: 0});
+    if (value == "NaN") {
+        return "-"
+    } else {
+        return value;
+    }
+}
+
+fetch('russia_with_data.json').then(response => {
     return response.json();
 }).then(features => {
     var info = L.control();
@@ -27,8 +49,22 @@ fetch('russia_compressed.json').then(response => {
     
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
-        this._div.innerHTML = '<h4>Статистика по регионам</h4>' +  (props ?
-            '<b>' + props.main_name + '</b><br/>'
+        this._div.innerHTML = '<h4>Статистика по регионам</h4></br>' +  (props ?
+            '<b>' + props.main_name + '</b><br/>' +
+            `<table>
+                <tr>
+                    <td>Средний доход чиновников-мужчин</td>
+                    <td>${normalize_number(props.m)}</td>
+                </tr>
+                <tr>
+                    <td>Средний доход чиновников-женщин</td>
+                    <td>${normalize_number(props.f)}</td>
+                </tr>
+                <tr>
+                    <td>Средний доход в регионе</td>
+                    <td>${normalize_number(props.median)}</td>
+                </tr>
+            </table>`
             : 'Наведите на регион');
     };
     
@@ -64,4 +100,5 @@ fetch('russia_compressed.json').then(response => {
     }
 
     regionsLayer = L.geoJSON(features, {style, onEachFeature}).addTo(map);
+    map.invalidateSize();
   })
