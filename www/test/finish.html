@@ -5,15 +5,20 @@
   <meta charset="utf-8">
   <title>Какой ты чиновник?</title>
   <script>
-    fetch('/api/findPerson', params = {
-        gender: localStorage.getItem("gender"),
-        region: localStorage.getItem("region"),
-        job: localStorage.getItem("job"),
-        age: localStorage.getItem("age")
-    }).then(response => {
+    var gender = localStorage.getItem("gender");
+    var region = localStorage.getItem("region");
+    var job = localStorage.getItem("job");
+    var age = localStorage.getItem("age");
+    fetch(`/api/findPerson?gender=${gender}&region${region}&job=${job}&age=${job}`)
+    .then(response => {
         return response.text();
     }).then(text => {
-        console.log(text);
+        if (text == "0") {
+            window.location.href = "tryagain.html";
+        } else {
+            window.location.href = "/game/game.html?id=" + text;
+        }
+            
     });
   </script>
 </head>

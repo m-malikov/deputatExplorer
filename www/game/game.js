@@ -74,7 +74,7 @@ function work() {
 
 function fetch_all() {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET', 'http://176.99.11.79/api/getAll', false)
+    xhr.open('GET', '/api/getAll', false)
     xhr.send()
     if (xhr.status !== 200) {
         console.error(xhr.status + ': ' + xhr.statusText)
@@ -86,7 +86,7 @@ function fetch_all() {
 
 function fetch_official(id) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET', 'http://176.99.11.79/api/get/' + id, false)
+    xhr.open('GET', '/api/get/' + id, false)
     xhr.send()
     if (xhr.status !== 200) {
         console.error(xhr.status + ': ' + xhr.statusText)
@@ -104,11 +104,14 @@ function init_data(id) {
     CELL_COST = SMALL_SALARY / CELLS_IN_SMALL_SALARY
     CELLS_NUMBER = BIG_SALARY / CELL_COST
     document.getElementById('name').innerText = NAME
-    document.getElementById('big_salary').innerText = 'Зарабатывает ' + BIG_SALARY + '₽ в год'
-    document.getElementById('small_salary').innerText = 'Вы зарабатываете ' + SMALL_SALARY + '₽ в месяц'
+    document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + BIG_SALARY.toLocaleString() + '</b> ₽ в год'
+    document.getElementById('small_salary').innerHTML = 'Вы зарабатываете <b>' + SMALL_SALARY.toLocaleString() + '</b> ₽ в месяц'
+    document.getElementById('office_name').innerText = res.office_name;
+    document.getElementById('region_name').innerText = res.region_name;
     generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
 
 }
 
-let all_officials = fetch_all()
-init_data(all_officials[0].id)
+let params = new URLSearchParams(document.location.search.substring(1));
+let id = params.get("id");
+init_data(id);
