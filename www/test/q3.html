@@ -9,8 +9,38 @@
   <script>
       function chooseJob(job) {
           localStorage.setItem("job", job);
-          window.location.href = "q4.html"
+          window.location.href = "finish.html"
       }
+
+      function setGenderPics() {
+          let gender = localStorage.getItem("gender")
+          if (gender !== 'M' && gender !== 'F') {
+              gender = 'M'
+          }
+          const emoji = new Map ([
+              ['doc', {
+                  'M': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-health-worker-type-1-2_1f468-1f3fb-200d-2695-fe0f.png',
+                  'F': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/female-health-worker_1f469-200d-2695-fe0f.png'
+              }],
+              ['police', {
+                  'M': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/police-officer_emoji-modifier-fitzpatrick-type-1-2_1f46e-1f3fb_1f3fb.png',
+                  'F': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/female-police-officer_1f46e-200d-2640-fe0f.png'
+              }],
+              ['teacher', {
+                  'M': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-teacher-type-1-2_1f468-1f3fb-200d-1f3eb.png',
+                  'F': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/female-teacher-type-1-2_1f469-1f3fb-200d-1f3eb.png'
+              }],
+              ['complicated', {
+                  'M': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-office-worker-type-1-2_1f468-1f3fb-200d-1f4bc.png',
+                  'F': 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/female-office-worker_1f469-200d-1f4bc.png'
+              }]
+          ])
+          emoji.forEach((val, type) => {
+              console.log(val)
+              document.getElementById(type).src = val[gender]
+          })
+      }
+      document.addEventListener("DOMContentLoaded", setGenderPics)
   </script>
 </head>
 
@@ -22,27 +52,27 @@
                 <td>
                     <button class="btn btn_choose" onclick="chooseJob(1)">
                         В больнице</br>
-                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-health-worker-type-1-2_1f468-1f3fb-200d-2695-fe0f.png"></image>
+                        <image id="doc"></image>
                     </button>
                 </td>
                 <td>
                     <button class="btn btn_choose" onclick="chooseJob(2)">
                         В полиции</br>
-                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/police-officer_emoji-modifier-fitzpatrick-type-1-2_1f46e-1f3fb_1f3fb.png"></image>
+                        <image id="police"></image>
                     </button>
                 </td>
             </tr>
             <tr>
                 <td>
                     <button class="btn btn_choose" onclick="chooseJob(3)">
-                        Я -- ученый</br>
-                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-teacher-type-1-2_1f468-1f3fb-200d-1f3eb.png"></image>
+                        Я &#8212; ученый</br>
+                        <image id="teacher"></image>
                     </button>
                 </td>
                 <td>
                     <button class="btn btn_choose btn_disabled" onclick="chooseJob(0)">
                         Всё сложно</br>
-                        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/male-office-worker-type-1-2_1f468-1f3fb-200d-1f4bc.png"></image>
+                        <image id="complicated"></image>
                     </button>
                 </td>
             </tr>
