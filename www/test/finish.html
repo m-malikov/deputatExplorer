@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Какой ты чиновник?</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <script>
+    var gender = localStorage.getItem("gender");
+    var region = localStorage.getItem("region");
+    var job = localStorage.getItem("job");
+    var age = localStorage.getItem("age");
+    fetch(`/api/findPerson?gender=${gender}&region=${region}&job=${job}&age=${job}`)
+    .then(response => {
+        return response.text();
+    }).then(text => {
+        if (text == "0") {
+            window.location.href = "tryagain.html";
+        } else {
+            window.location.href = "/game/game.html?id=" + text;
+        }
+    });
+  </script>
+</head>
+
+<body>
+    <div class="main" align="center">
+        <h1> Ищем подходящего чиновника... </h1>
+    </div>
+</body>
+</html>

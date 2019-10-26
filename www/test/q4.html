@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <title>Какой ты чиновник?</title>
+
+  <script>
+      function chooseAge(age) {
+          localStorage.setItem("age", age);
+          window.location.href = "finish.html"
+      }
+  </script>
+</head>
+
+<body>
+    <div class="main" align="center">
+    <h1> Насколько давно? </h1>
+        <button class="btn" onclick="chooseAge(0)">
+            Ещё молод</br>
+            <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/child_emoji-modifier-fitzpatrick-type-1-2_1f9d2-1f3fb_1f3fb.png"></image>
+        </button>
+        <button class="btn" onclick="chooseAge(1)">
+            В расцвете сил</br>
+            <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/man_emoji-modifier-fitzpatrick-type-1-2_1f468-1f3fb_1f3fb.png"></image>
+        </button>
+        <button class="btn" onclick="chooseAge(2)">
+            Опытный сотрудник</br>
+            <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/man-white-haired-light-skin-tone_1f468-1f3fb-200d-1f9b3.png"></image>
+        </button>
+        <button class="btn" onclick="chooseAge(3)">
+            Ветеран труда</br>
+            <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/older-man_emoji-modifier-fitzpatrick-type-1-2_1f474-1f3fb_1f3fb.png"></image>
+        </button>
+    </div>
+</html>

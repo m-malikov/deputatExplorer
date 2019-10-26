@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Какой ты чиновник?</title>
+
+  <script>
+    fetch('/regions.json').then(response => {
+        return response.json();
+    }).then(regions => {
+        var selector = document.getElementById("regions");
+        for (r of regions) {
+            selector.innerHTML += (`<option value=${r.id}>${r.name}</option>`);
+        }
+    });
+
+    function select() {
+        var selector = document.getElementById("regions");
+        var value = selector.options[selector.selectedIndex].value;
+        localStorage.setItem("region", value);
+        window.location.href = "q3.html"
+    }
+  </script>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+    <div class="main" align="center">
+        <h1> Откуда ты? </h1>
+        <image src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/round-pushpin_1f4cd.png"></image>
+        </br>
+        <select id="regions">
+            <option value=0>Нет региона</option>
+        </select>
+        </br>
+        <button class="btn" onclick="select()">Выбрать</button>    
+    </div>
+</body>
+</html>

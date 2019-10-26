@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="/style.css">
     <meta charset="utf-8">
     <title>Pass</title>
 </head>
@@ -11,10 +11,12 @@
 
 <div class="row">
   <div class="main" id="area">
-      <h1 id="main_h" align="center">Догони чиновника</h1>
   </div>
   <div class="side">
-      <b><p class="unit" id="name"></p></b>
+      <h2><p class="unit" id="name"></p></h2>
+      <p class="unit" id="office_name"></p>
+      <p class="unit" id="region_name"></p>
+      </br>
       <p class="unit" id="big_salary"></p>
       <p class="unit" id="small_salary"></p>
       <br>
@@ -35,7 +37,13 @@
       <p class="unit">Чиновник работал 12 месяцев</p>
   </div>
 </div>
-
+<div class="row">
+    <div class="main" align="center">
+        <a class="unit" href="/map" align="center">
+            Смотреть полную статистику по регионам
+        </a>
+    </div>
+</div>
 <script src="game.js"></script>
 </body>
 </html>

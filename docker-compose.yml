@@ -6,7 +6,8 @@ services:
     nginx:
         image: nginx
         volumes:
-          - ./nginx.d:/etc/nginx/conf.d
+          - ./nginx/conf.d:/etc/nginx/conf.d
+          - ./www:/var/www
         ports:
           - "80:80"
     mongo:
