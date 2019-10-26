@@ -1,46 +1,39 @@
 from flask import Flask, jsonify, request
+import pymongo
+
 app = Flask(__name__)
 
-@app.route('/api/getAll')
-def get_all():
-    return jsonify([
-        {
-            "name": "Кудрявцев Николай Николаевич",
-            "id": 21583,
-            "info": "Ректор ФГАОУ ВО Московский физико-технический институт (государственный университет)"
-        },
-        {
-            "name": "Путин Владимир Владимирович",
-            "id": 582,
-            "info": "Президент Российской Федерации"
-        }
-    ])
+client = pymongo.MongoClient("176.99.11.79:27017", username="root", password="example")
+db = client.declarations.persons
 
 @app.route('/api/get/<int:person_id>')
 def get_one(person_id):
-    return jsonify(
-        {
-            "name": "Кудрявцев Николай Николаевич",
-            "salary": 20531276,
-            "office_name": "ФГОУ ВО Московский физико-технический институт (государственный университет)",
-            "region_name": "Москва",
-            "otherSalaries": [
-                {
-                    "name": "Медицинская сестра",
-                    "salary": 28200
-                },
-                {
-                    "name": "Учитель",
-                    "salary": 92944
-                }
-            ],
-        }
-    )
+    person = db.find_one({"_id": person_id})
+    declaration = max(person["declarations"],
+                             key=lambda x: x["main"]["year"])
+    incomes = filter(lambda x: x.get("relative") is None, declaration["incomes"])
+    total_income = sum(map(lambda x: x["size"], incomes))
+
+    office_names = [declaration["main"]["office"]["name"] for declaration in person["declarations"]]
+    office_names = list(set(office_names))
+
+    region_names = []
+    for declaration in person["declarations"]:
+        if declaration["main"]["office"]["region"] is not None:
+            region_names.append(declaration["main"]["office"]["region"]["name"])
+    region_names = list(set(region_names))
+
+    return jsonify({
+        "name": declaration["main"]["person"]["name"],
+        "salary": total_income,
+        "office_names": office_names,
+        "region_names": region_names
+    })
 
 @app.route('/api/findPerson')
 def findPerson():
     gender = request.args.get("gender")
-    region = request.args.get("region")
+    region = int(request.args.get("region"))
     age = request.args.get("age")
     job = request.args.get("job")
     """
@@ -62,7 +55,20 @@ def findPerson():
         Можно что-то рандомизировать наверное.
 
     """
-    return '21583'
+    gender_cursor = db.aggregate([
+        {
+            '$project': {
+                'declaration': {'$arrayElemAt': ['$declarations', -1]}
+            }
+        },
+        {
+            '$match': {
+                'declaration.main.person.gender': gender,
+                'declaration.main.office.region.id': region
+            }
+        }
+])
+    return str(gender_cursor.next()["_id"])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
