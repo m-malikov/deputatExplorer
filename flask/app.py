@@ -32,43 +32,60 @@ def get_one(person_id):
 
 @app.route('/api/findPerson')
 def findPerson():
+
+    match_expression = {}
+
     gender = request.args.get("gender")
+    match_expression.update({
+        'declarations.main.person.gender': gender
+    })
+
     region = int(request.args.get("region"))
-    age = request.args.get("age")
+    if region == 0:
+        match_expression.update({
+            'declarations.main.office.region': None,
+        })
+
+    else:
+        match_expression.update({
+            'declarations.main.office.region.id': region 
+        })
+    
     job = request.args.get("job")
-    """
-     Нужно найти чиновников по следующим критериям:
-        gender должен совпадать со значением параметра (M или F)
-        
-        Если в region ноль -- у чиновника должен быть регион null (не привязан к региону)
-        Если в region не ноль -- надо искать чиновника с тем же регионом (в параметре id региона)
+    if job == "3":
+        match_expression.update({
+            '$or': [
+                {'declarations.main.office.name': {'$regex': '.*БОУ.*'}},
+                {'declarations.main.office.name': {'$regex': '.*институт.*', "$options": "-i"}},
+                {'declarations.main.office.name': {'$regex': '.*университет.*', "$options": "-i"}},
+                {'declarations.main.office.name': {'$regex': '.*обр.*', "$options": "-i"}},
+            ]
+        })
+    elif job == "2":
+        match_expression.update({
+            '$or': [
+               {'declarations.main.office.name': {'$regex': '.*ФСИН.*'}}, 
+               {'declarations.main.office.name': {'$regex': '.*МВД.*'}}
+            ]
+        })
+    elif job == "1":
+        match_expression.update({
+            '$or': [
+               {'declarations.main.office.name': {'$regex': '.*БУЗ.*'}}, 
+               {'declarations.main.office.name': {'$regex': '.*здрав.*', "$options": "-i"}}
+            ]
+        })
 
-        age -- там целое число от 0 до 3 включительно. Нужно посмотреть на данные и разбить по группам чтобы
-        было примерно одинаково.
-
-        job -- вообще предполагалось 1 - здравоохранение, 2 - силовые ведомства и суды, 
-        3 - наука и образование, 0 - всё остальное. Но чет не очень понятно как их отсеивать.
-        У людей из минздрава office 596, у минобрнауки 579 и 6742, у мвд 4 и 959. Но все эти люди походу без региона.
-        Надо порисерчить данные и понять как выцепить остальных. Короче это лучше напоследок оставить.
-
-        Вернуть нужно id чиновника или 0 если такого не нашлось. Если нашлось несколько -- наверное выбирать с наибольшим доходом.
-        Можно что-то рандомизировать наверное.
-
-    """
-    gender_cursor = db.aggregate([
+    cursor = db.aggregate([
         {
-            '$project': {
-                'declaration': {'$arrayElemAt': ['$declarations', -1]}
-            }
+            '$unwind': '$declarations'
         },
         {
-            '$match': {
-                'declaration.main.person.gender': gender,
-                'declaration.main.office.region.id': region
-            }
-        }
-])
-    return str(gender_cursor.next()["_id"])
+            '$match': match_expression
+        } 
+    ])
+
+    return str(cursor.next()["_id"])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
