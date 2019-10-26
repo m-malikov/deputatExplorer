@@ -106,8 +106,8 @@ function init_data(id) {
     document.getElementById('name').innerText = NAME
     document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + BIG_SALARY.toLocaleString() + '</b> ₽ в год'
     document.getElementById('small_salary').innerHTML = 'Вы зарабатываете <b>' + SMALL_SALARY.toLocaleString() + '</b> ₽ в месяц'
-    document.getElementById('office_name').innerText = res.office_name;
-    document.getElementById('region_name').innerText = res.region_name;
+    document.getElementById('office_name').innerText = res.office_names.join("\n");
+    document.getElementById('region_name').innerText = res.region_names.join(", ");
     generate_cubes(Math.ceil(CELLS_NUMBER / CELLS_IN_ROW), CELLS_IN_ROW, 5, 5)
 
 }
