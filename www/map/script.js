@@ -31,7 +31,7 @@ function style(feature) {
 
 function normalize_number(number) {
     let value = parseInt(number).toLocaleString(options={maximumFractionDigits: 0});
-    if (value == "NaN") {
+    if (value == "NaN" || !value) {
         return "-"
     } else {
         return value;
@@ -65,6 +65,18 @@ fetch('russia_with_data.json').then(response => {
                 <tr>
                     <td>Средний доход в регионе</td>
                     <td>${normalize_number(props.salary_mean)}</td>
+                </tr>
+                <tr>
+                    <td>Индекс роста региона</td>
+                    <td>${props.growing_index}</td>
+                </tr>
+                <tr>
+                    <td>Средние денежные накопления чиновников</td>
+                    <td>${normalize_number(props.savings_mean)}</td>
+                </tr>
+                <tr>
+                    <td>Средний доход супругов чиновников</td>
+                    <td>${normalize_number(props.siblings_mean_income)}</td>
                 </tr>
                 <tr>
                     <td>Отношение дохода чиновника к среднему</td>
