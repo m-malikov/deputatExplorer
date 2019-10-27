@@ -69,7 +69,7 @@ function work() {
 }
 
 function start_working() {
-    document.getElementById("start_working").innerText = "Продолжить работу";
+    document.getElementById("start_working").innerText = "Работать месяц";
     document.getElementById("start_working").onclick = work;
     document.getElementById("time").style.display = "block";
     work();
