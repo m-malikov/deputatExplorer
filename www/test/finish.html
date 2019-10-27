@@ -12,12 +12,13 @@
     var age = localStorage.getItem("age");
     fetch(`/api/findPerson?gender=${gender}&region=${region}&job=${job}&age=${job}`)
     .then(response => {
-        return response.text();
-    }).then(text => {
-        if (text == "0") {
+        return response.json();
+    }).then(data => {
+        if (data == []) {
             window.location.href = "tryagain.html";
         } else {
-            window.location.href = "/game/game.html?id=" + text;
+            localStorage.setItem("otherIds", data);
+            window.location.href = "/game/game.html?id=" + data[0];
         }
     });
   </script>

@@ -1,5 +1,9 @@
 from flask import Flask, jsonify, request
 import pymongo
+import sys
+from google_images_download import google_images_download
+import time
+import urllib.parse
 
 app = Flask(__name__)
 
@@ -33,6 +37,40 @@ def get_one(person_id):
         "region_names": region_names,
         "region_ids": region_ids
     })
+
+@app.route('/api/getPhoto')
+def getPhoto():
+    name = urllib.parse.unquote(request.args.get("name"))
+    orig_stdout = sys.stdout
+    f = open('URLS.txt', 'w')
+    sys.stdout = f
+
+    response = google_images_download.googleimagesdownload()
+
+    arguments = {"keywords"    : name,
+                "limit"        : 1,
+                "print_urls"   : True,
+                }
+    paths = response.download(arguments)
+
+    sys.stdout = orig_stdout
+    f.close()
+
+    with open('URLS.txt') as f:
+        content = f.readlines()
+    f.close()
+
+    time.sleep(2)
+    for j in range(len(content)):
+        print(content)
+        if content[j][:9] == 'Completed':
+            url = content[j-1][11:-1]
+            break
+
+    with open('URLS.txt') as f:
+        content = f.readlines()
+    f.close()
+    return url
 
 @app.route('/api/findPerson')
 def findPerson():
@@ -86,12 +124,17 @@ def findPerson():
             },
             {
                 '$match': match_expression
-            } 
+            },
+            {
+                '$limit': 10
+            },
         ])
 
-        return str(cursor.next()["_id"])
+        data = [item["_id"] for item in list(cursor)]
+        data = list(set(data))[:5]
+        return jsonify(data)
     except:
-        return "0"
+        return jsonify([])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
