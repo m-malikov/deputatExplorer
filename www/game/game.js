@@ -68,7 +68,7 @@ fetch(`/api/get/${id}`)
         document.getElementById('small_salary').innerHTML = 'Средний доход в России <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц'; 
         for (region of regions_data["features"]) {
             if (person_data.region_ids.includes(region.properties.id)) {
-                AVERAGE_SALARY = region.properties.median;
+                AVERAGE_SALARY = region.properties.salary_mean;
                 document.getElementById('small_salary').innerHTML = 'Средний доход в регионе <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц';
                 break;
             }
