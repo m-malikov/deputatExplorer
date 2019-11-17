@@ -4,10 +4,13 @@ import sys
 from google_images_download import google_images_download
 import time
 import urllib.parse
+import os
 
 app = Flask(__name__)
 
-client = pymongo.MongoClient("176.99.11.79:27017", username="root", password="example")
+client = pymongo.MongoClient(os.environ["MONGO_HOST"], 
+                             username=os.environ['MONGO_USERNAME'], 
+                             password=os.environ["MONGO_PASSWORD"])
 db = client.declarations.persons
 
 @app.route('/api/get/<int:person_id>')

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+    flask:
+        build: flask
+        env_file:
+                - env/dev.env
+    nginx:
+        image: nginx
+        volumes:
+          - ./nginx/conf.d:/etc/nginx/conf.d
+          - ./www:/var/www
+        ports:
+          - "80:80"
+        
