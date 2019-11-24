@@ -1,34 +1,39 @@
-from flask import Flask, jsonify, request
-import pymongo
-import sys
-from google_images_download import google_images_download
 import time
 import urllib.parse
 import os
+import sys
+import pymongo
+from google_images_download import google_images_download
+from flask import Flask, jsonify, request
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
-client = pymongo.MongoClient(os.environ["MONGO_HOST"], 
-                             username=os.environ['MONGO_USERNAME'], 
+CLIENT = pymongo.MongoClient(os.environ["MONGO_HOST"],
+                             username=os.environ['MONGO_USERNAME'],
                              password=os.environ["MONGO_PASSWORD"])
-db = client.declarations.persons
+DB = CLIENT.declarations.persons
 
-@app.route('/api/get/<int:person_id>')
+
+@APP.route('/api/get/<int:person_id>')
 def get_one(person_id):
-    person = db.find_one({"_id": person_id})
+    person = DB.find_one({"_id": person_id})
     declaration = max(person["declarations"],
-                             key=lambda x: x["main"]["year"])
-    incomes = filter(lambda x: x.get("relative") is None, declaration["incomes"])
+                      key=lambda x: x["main"]["year"])
+    incomes = filter(
+        lambda x: x.get("relative") is None,
+        declaration["incomes"])
     total_income = sum(map(lambda x: x["size"], incomes))
 
-    office_names = [declaration["main"]["office"]["name"] for declaration in person["declarations"]]
+    office_names = [declaration["main"]["office"]["name"]
+                    for declaration in person["declarations"]]
     office_names = list(set(office_names))
 
     region_names = []
     region_ids = []
     for declaration in person["declarations"]:
         if declaration["main"]["office"]["region"] is not None:
-            region_names.append(declaration["main"]["office"]["region"]["name"])
+            region_names.append(
+                declaration["main"]["office"]["region"]["name"])
             region_ids.append(declaration["main"]["office"]["region"]["id"])
     region_names = list(set(region_names))
     region_ids = list(set(region_ids))
@@ -41,42 +46,44 @@ def get_one(person_id):
         "region_ids": region_ids
     })
 
-@app.route('/api/getPhoto')
-def getPhoto():
+
+@APP.route('/api/getPhoto')
+def get_photo():
     name = urllib.parse.unquote(request.args.get("name"))
     orig_stdout = sys.stdout
-    f = open('URLS.txt', 'w')
-    sys.stdout = f
+    file = open('URLS.txt', 'w')
+    sys.stdout = file
 
     response = google_images_download.googleimagesdownload()
 
-    arguments = {"keywords"    : name,
-                "limit"        : 1,
-                "print_urls"   : True,
-                }
-    paths = response.download(arguments)
+    arguments = {"keywords": name,
+                 "limit": 1,
+                 "print_urls": True,
+                 }
+    _ = response.download(arguments)
 
     sys.stdout = orig_stdout
-    f.close()
+    file.close()
 
-    with open('URLS.txt') as f:
-        content = f.readlines()
-    f.close()
+    with open('URLS.txt') as file:
+        content = file.readlines()
+    file.close()
 
     time.sleep(2)
     for j in range(len(content)):
         print(content)
         if content[j][:9] == 'Completed':
-            url = content[j-1][11:-1]
+            url = content[j - 1][11:-1]
             break
 
-    with open('URLS.txt') as f:
-        content = f.readlines()
-    f.close()
+    with open('URLS.txt') as file:
+        _ = file.readlines()
+    file.close()
     return url
 
-@app.route('/api/findPerson')
-def findPerson():
+
+@APP.route('/api/findPerson')
+def find_person():
     try:
         match_expression = {}
 
@@ -93,35 +100,36 @@ def findPerson():
 
         else:
             match_expression.update({
-                'declarations.main.office.region.id': region 
+                'declarations.main.office.region.id': region
             })
-        
+
         job = request.args.get("job")
         if job == "3":
             match_expression.update({
                 '$or': [
                     {'declarations.main.office.name': {'$regex': '.*БОУ.*'}},
                     {'declarations.main.office.name': {'$regex': '.*институт.*', "$options": "-i"}},
-                    {'declarations.main.office.name': {'$regex': '.*университет.*', "$options": "-i"}},
+                    {'declarations.main.office.name': {'$regex': '.*университет.*',
+                                                       "$options": "-i"}},
                     {'declarations.main.office.name': {'$regex': '.*обр.*', "$options": "-i"}},
                 ]
             })
         elif job == "2":
             match_expression.update({
                 '$or': [
-                {'declarations.main.office.name': {'$regex': '.*ФСИН.*'}}, 
-                {'declarations.main.office.name': {'$regex': '.*МВД.*'}}
+                    {'declarations.main.office.name': {'$regex': '.*ФСИН.*'}},
+                    {'declarations.main.office.name': {'$regex': '.*МВД.*'}}
                 ]
             })
         elif job == "1":
             match_expression.update({
                 '$or': [
-                {'declarations.main.office.name': {'$regex': '.*БУЗ.*'}}, 
-                {'declarations.main.office.name': {'$regex': '.*здрав.*', "$options": "-i"}}
+                    {'declarations.main.office.name': {'$regex': '.*БУЗ.*'}},
+                    {'declarations.main.office.name': {'$regex': '.*здрав.*', "$options": "-i"}}
                 ]
             })
 
-        cursor = db.aggregate([
+        cursor = DB.aggregate([
             {
                 '$unwind': '$declarations'
             },
@@ -136,8 +144,9 @@ def findPerson():
         data = [item["_id"] for item in list(cursor)]
         data = list(set(data))[:5]
         return jsonify(data)
-    except:
+    except BaseException:
         return jsonify([])
 
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    APP.run(host='0.0.0.0', port=80)
