@@ -13,8 +13,11 @@
 Проверить кодстайл:
 
 ```
-python -m pylint flask/app.py --disable=missing-docstring --disable=consider-using-enumerate --disable=broad-except
+npm init
+npm install eslint --save-dev
 npx eslint www/ --fix
+
+python -m pylint flask/app.py --disable=missing-docstring --disable=consider-using-enumerate --disable=broad-except
 ```
 
 Нужно написать в envs/dev.env хост/логин/пароль
