@@ -1,105 +1,103 @@
-let params = new URLSearchParams(document.location.search.substring(1));
-let id = params.get("id");
+const params = new URLSearchParams(document.location.search.substring(1))
+const id = params.get('id')
 
-
-
-var CELL_COST = 1000;
-var AVERAGE_SALARY;
-var PERSON_SALARY;
-function createTable() {
-    var n_cells = PERSON_SALARY / CELL_COST;
-    var innerHTML = "";
-    var coin_size = Math.max(15, -PERSON_SALARY/35000 + 198/7);
-    for (let i=0; i < n_cells; i++) {
-        innerHTML +=  `<div class="coin" style="width: ${coin_size}px; height: ${coin_size}px; margin: ${coin_size/2}px"></div>`
+var CELL_COST = 1000
+var AVERAGE_SALARY
+var PERSON_SALARY
+function createTable () {
+    var nCells = PERSON_SALARY / CELL_COST
+    var innerHTML = ''
+    var coinSize = Math.max(15, -PERSON_SALARY / 35000 + 198 / 7)
+    for (let i = 0; i < nCells; i++) {
+        innerHTML += `<div class="coin" style="width: ${coinSize}px; height: ${coinSize}px; margin: ${coinSize / 2}px"></div>`
     }
-    let area = document.getElementById('area');
-    area.innerHTML = innerHTML;
+    const area = document.getElementById('area')
+    area.innerHTML = innerHTML
 }
 
-function add_other() {
-    var other_ids = localStorage.getItem("otherIds").split(',');
-    for (let other_id of other_ids) {
-        if (other_id != id) {
-            fetch(`/api/get/${other_id}`)
-            .then(response => {
-                return response.json()
-            }).then(other_data => {
-                document.getElementById("others").innerHTML += `<li><a href="/game/game.html?id=${other_id}">${other_data.name}</a></li>`
-            })
+function addOther () {
+    const otherIds = localStorage.getItem('otherIds').split(',')
+    for (const otherId of otherIds) {
+        if (otherId !== id) {
+            fetch(`/api/get/${otherId}`)
+                .then(response => {
+                    return response.json()
+                }).then(otherData => {
+                    document.getElementById('others').innerHTML += `<li><a href="/game/game.html?id=${otherId}">${otherData.name}</a></li>`
+                })
         }
     }
 }
 
-function add_photo(name) {
+function addPhoto (name) {
     fetch('/api/getPhoto?name=' + encodeURI(name)).then(response => {
         if (response.ok) {
-            return response.text();
+            return response.text()
         }
     }).then(url => {
-        if (url) document.getElementById("photo").innerHTML += `<img src="${url}" class="avatar"></img>`
+        if (url) document.getElementById('photo').innerHTML += `<img src="${url}" class="avatar"></img>`
     })
 }
 
-var WORK_PERIODS = 0;
-function work() {
-    WORK_PERIODS += 1;
-    var total_earned = WORK_PERIODS * AVERAGE_SALARY;
-    var cells_to_highlight = total_earned / CELL_COST;
-    console.log(AVERAGE_SALARY);
-    
-    for ([i, child] of document.getElementById("area").childNodes.entries()) {
-        child.classList.add("activated");
-        if (i > cells_to_highlight) break;
+var WORK_PERIODS = 0
+function work () {
+    WORK_PERIODS += 1
+    const totalEarned = WORK_PERIODS * AVERAGE_SALARY
+    const cellsToHighlight = totalEarned / CELL_COST
+    console.log(AVERAGE_SALARY)
+
+    for (const [i, child] of document.getElementById('area').childNodes.entries()) {
+        child.classList.add('activated')
+        if (i > cellsToHighlight) break
     }
 
-    document.getElementById("work_periods").innerText = WORK_PERIODS;
-    Date.prototype.addMonths = function(months) {
-        var date = new Date(this.valueOf());
-        date.setMonth(date.getDate() + months);
-        return date;
+    document.getElementById('work_periods').innerText = WORK_PERIODS
+    Date.prototype.addMonths = function (months) {
+        const date = new Date(this.valueOf())
+        date.setMonth(date.getDate() + months)
+        return date
     }
-    var date = new Date();
-    document.getElementById("current_date").innerText = date.addMonths(WORK_PERIODS).toLocaleDateString();
-    document.getElementById("total_earned").innerText = parseInt(total_earned).toLocaleString();
+    const date = new Date()
+    document.getElementById('current_date').innerText = date.addMonths(WORK_PERIODS).toLocaleDateString()
+    document.getElementById('total_earned').innerText = parseInt(totalEarned).toLocaleString()
 
-    if (total_earned > PERSON_SALARY) {
-        document.getElementById("start_working").style.display = "none";
+    if (totalEarned > PERSON_SALARY) {
+        document.getElementById('startWorking').style.display = 'none'
     }
 }
 
-function start_working() {
-    document.getElementById("start_working").innerText = "Работать месяц";
-    document.getElementById("start_working").onclick = work;
-    document.getElementById("time").style.display = "block";
-    work();
+function startWorking () {
+    document.getElementById('startWorking').innerText = 'Работать месяц'
+    document.getElementById('startWorking').onclick = work
+    document.getElementById('time').style.display = 'block'
+    work()
 }
 
 fetch(`/api/get/${id}`)
-.then(response => {
-    return response.json();
-}).then(person_data => {
-    document.getElementById('name').innerText = person_data.name;
-    document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + parseInt(person_data.salary / 12).toLocaleString() + '</b> ₽ в месяц';
-    document.getElementById('office_name').innerText = person_data.office_names.join("\n");
-    document.getElementById('region_name').innerText = person_data.region_names.join(", ");
-
-    fetch('/map/russia_with_data.json')
     .then(response => {
-        return response.json();
-    }).then(regions_data => {
-        AVERAGE_SALARY = 32635;
-        document.getElementById('small_salary').innerHTML = 'Средний доход в России <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц'; 
-        for (region of regions_data["features"]) {
-            if (person_data.region_ids.includes(region.properties.id)) {
-                AVERAGE_SALARY = region.properties.salary_mean;
-                document.getElementById('small_salary').innerHTML = 'Средний доход в регионе <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц';
-                break;
-            }
-        }
-        PERSON_SALARY = person_data.salary / 12;
-        createTable();
-        add_other();
-        add_photo(person_data.name);
+        return response.json()
+    }).then(personData => {
+        document.getElementById('name').innerText = personData.name
+        document.getElementById('big_salary').innerHTML = 'Зарабатывает <b>' + parseInt(personData.salary / 12).toLocaleString() + '</b> ₽ в месяц'
+        document.getElementById('office_name').innerText = personData.office_names.join('\n')
+        document.getElementById('region_name').innerText = personData.region_names.join(', ')
+
+        fetch('/map/russia_with_data.json')
+            .then(response => {
+                return response.json()
+            }).then(regionsData => {
+                AVERAGE_SALARY = 32635
+                document.getElementById('small_salary').innerHTML = 'Средний доход в России <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц'
+                for (const region of regionsData.features) {
+                    if (personData.region_ids.includes(region.properties.id)) {
+                        AVERAGE_SALARY = region.properties.salary_mean
+                        document.getElementById('small_salary').innerHTML = 'Средний доход в регионе <b>' + parseInt(AVERAGE_SALARY).toLocaleString() + '</b> ₽ в месяц'
+                        break
+                    }
+                }
+                PERSON_SALARY = personData.salary / 12
+                createTable()
+                addOther()
+                addPhoto(personData.name)
+            })
     })
-})
