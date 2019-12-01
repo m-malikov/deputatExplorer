@@ -14,11 +14,11 @@
     .then(response => {
         return response.json();
     }).then(data => {
-        if (!data) {
-            window.location.href = "tryagain.html";
-        } else {
+        if (Array.isArray(data) && data.length) {
             localStorage.setItem("otherIds", data);
             window.location.href = "/game/game.html?id=" + data[0];
+        } else {
+            window.location.href = "tryagain.html";
         }
     });
   </script>
