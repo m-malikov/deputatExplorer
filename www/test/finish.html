@@ -14,7 +14,7 @@
     .then(response => {
         return response.json();
     }).then(data => {
-        if (data == []) {
+        if (!data) {
             window.location.href = "tryagain.html";
         } else {
             localStorage.setItem("otherIds", data);
