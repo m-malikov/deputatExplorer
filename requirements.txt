@@ -1,3 +1,6 @@
+# Requirements for whole project, it used for setting local python environment
 pymongo
 motor
 pylint
+google_images_download
+flask

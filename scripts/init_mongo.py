@@ -4,8 +4,12 @@ from pymongo.bulk import BulkWriteError
 from collections import defaultdict
 
 DATA_FILE_NAME = 'declarations.json'
+HOST = ""
+USERNAME = ""
+PASSWORD = ""
 
-client = pymongo.MongoClient("176.99.11.79:27017", username="root", password="example")
+client = pymongo.MongoClient(HOST, username=USERNAME, password=PASSWORD)
+
 db = client.declarations
 print("Server Status: ", db.command("serverStatus"))
 
